@@ -1,6 +1,5 @@
 <?php
 
-//header("content-type:text/html;charset=utf-8");  //设置编码
 
 require_once dirname(__FILE__).'/../function.php'; 
 
@@ -38,12 +37,11 @@ function add(){
    }
 
     $imasge = '添加成功';
+   header('Location:'.$_SERVER['PHP_SELF']);
 
 }
 
-//TODO: 查询数据
-$query = news_bridege_sql("select * from categories");
-$categories = news_query_all($query);
+
 
 
 if($_SERVER['REQUEST_METHOD'] !=='GET'){
@@ -51,6 +49,10 @@ if($_SERVER['REQUEST_METHOD'] !=='GET'){
         add();
     }
 }
+
+//TODO: 查询数据
+$query = news_bridege_sql("select * from categories");
+$categories = news_query_all($query);
 
  ?>
 
@@ -123,7 +125,7 @@ if($_SERVER['REQUEST_METHOD'] !=='GET'){
                 <td><?php echo $value['slug']; ?></td>
                 <td class="text-center">
                   <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
+                  <a href="javascript:;" class="btn btn-danger btn-xs" data-id="<?php echo $value['id']?>">删除</a>
                 </td>
               </tr>
          <?php endforeach; ?>
@@ -143,13 +145,33 @@ if($_SERVER['REQUEST_METHOD'] !=='GET'){
   <script>NProgress.done()</script>
   <script>
 
-  //TODO :全选与不全选
+
   $(function ($) {
 
+
+
+      //TODO: 单条删除
+      var aFather = $('tbody .text-center');
+      var aObj = $('tbody a:eq(1)');
+      aFather.on('click',aObj,function () {
+          // console.dir($(this));
+
+       var id = $(this).children('a').eq(1)[0].dataset['id'];
+          $.get('/admin/api/delete.php',{id:id},function (data) {
+              if ( data < 1) {
+                return;
+              }
+              window.location.reload();
+          });
+      });
+
+    
+
+    //TODO :全选与不全选
       var idex = 0;
       var all_check = $('.table input:first');
       var sons_check = $('.table tbody input');
-      var delete_btn = $('.page-action a')
+      var delete_btn = $('.page-action a');
 
       all_check.on('click',function () {
 
