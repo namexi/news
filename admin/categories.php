@@ -125,7 +125,7 @@ $categories = news_query_all($query);
                 <td><?php echo $value['slug']; ?></td>
                 <td class="text-center">
                   <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs" data-id="<?php echo $value['id']?>">删除</a>
+                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
                 </td>
               </tr>
          <?php endforeach; ?>
@@ -147,24 +147,6 @@ $categories = news_query_all($query);
 
 
   $(function ($) {
-
-
-
-      //TODO: 单条删除
-      var aFather = $('tbody .text-center');
-      var aObj = $('tbody a:eq(1)');
-      aFather.on('click',aObj,function () {
-          // console.dir($(this));
-
-       var id = $(this).children('a').eq(1)[0].dataset['id'];
-          $.get('/admin/api/delete.php',{id:id},function (data) {
-              if ( data < 1) {
-                return;
-              }
-              window.location.reload();
-          });
-      });
-
     
 
     //TODO :全选与不全选
