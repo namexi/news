@@ -41,6 +41,9 @@ function add(){
 
 }
 
+//TODO: 查询数据
+$query = news_bridege_sql("select * from categories");
+$categories = news_query_all($query);
 
 
 if($_SERVER['REQUEST_METHOD'] !=='GET'){
@@ -113,33 +116,17 @@ if($_SERVER['REQUEST_METHOD'] !=='GET'){
               </tr>
             </thead>
             <tbody>
+            <?php foreach ($categories as $value): ?>
               <tr>
                 <td class="text-center"><input type="checkbox"></td>
-                <td>未分类</td>
-                <td>uncategorized</td>
+                <td><?php echo $value['name']; ?></td>
+                <td><?php echo $value['slug']; ?></td>
                 <td class="text-center">
                   <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
                   <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
                 </td>
               </tr>
-              <tr>
-                <td class="text-center"><input type="checkbox"></td>
-                <td>未分类</td>
-                <td>uncategorized</td>
-                <td class="text-center">
-                  <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-center"><input type="checkbox"></td>
-                <td>未分类</td>
-                <td>uncategorized</td>
-                <td class="text-center">
-                  <a href="javascript:;" class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-                </td>
-              </tr>
+         <?php endforeach; ?>
             </tbody>
           </table>
         </div>
