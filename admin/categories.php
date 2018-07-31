@@ -43,16 +43,41 @@ function add(){
 
 //TODO: 更新数据
 
+function edit_categories(){
+        global $imasge;
+        global $categories_edit;
+
+        $id = $categories_edit['id'];
+
+        $edit_name = isset($_POST['name'])? $_POST['name']: $categories_edit['name'];
+        $edit_slug = isset($_POST['slug'])? $_POST['slug']: $categories_edit['slug'];
+        $categories_edit['name'] = $edit_name;
+        $categories_edit['slug'] = $edit_slug;
+        $edit_row = news_dele_change("update categories set name='{$edit_name}',slug='{$edit_slug}' where id={$id}");
+        if ($edit_row < 1){
+            $imasge = '未更新';
+            return;
+        }
+    $imasge = '更新成功';
+}
 
 
-
-
+if (!isset($_GET['id'])){
 
     if($_SERVER['REQUEST_METHOD'] ==='POST'){
         add();
     }
 
+}else{
 
+    $query1 = news_bridege_sql("select * from categories where id={$_GET['id']}");
+    $categories_edit = news_query_one($query1);
+
+    if($_SERVER['REQUEST_METHOD'] ==='POST'){
+        edit_categories();
+    }
+
+}
 
 
 
@@ -96,6 +121,26 @@ $categories = news_query_all($query);
         <?php endif ?>
 
       <div class="row">
+      <!--  编辑区域  -->
+        <?php if(isset($_GET['id'])): ?>
+          <div class="col-md-4">
+              <form action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $categories_edit['id'];?>" method="post">
+                  <h2>编辑分类目录</h2>
+                  <div class="form-group">
+                      <label for="name">名称</label>
+                      <input id="name" class="form-control" name="name" type="text" placeholder="分类名称" value="<?php echo $categories_edit['name']; ?>" >
+                  </div>
+                  <div class="form-group">
+                      <label for="slug">别名</label>
+                      <input id="slug" class="form-control" name="slug" type="text" placeholder="slug" value="<?php echo $categories_edit['slug']; ?>">
+                      <p class="help-block">https://zce.me/category/<strong>slug</strong></p>
+                  </div>
+                  <div class="form-group">
+                      <button class="btn btn-primary" type="submit">保存</button>
+                  </div>
+              </form>
+        <?php else: ?>
+
           <div class="col-md-4">
               <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                   <h2>添加新分类目录</h2>
@@ -113,6 +158,8 @@ $categories = news_query_all($query);
               <button class="btn btn-primary" type="submit">添加</button>
             </div>
           </form>
+        <?php endif;?>
+
         </div>
         <div class="col-md-8">
           <div class="page-action">
@@ -206,7 +253,44 @@ $categories = news_query_all($query);
 
 
 
-
+    //   var idex = 0;
+    //   var all_check = $('.table input:first');
+    //   var sons_check = $('.table tbody input');
+    //   var delete_btn = $('.page-action a');
+    //
+    //   all_check.on('click',function () {
+    //
+    //       sons_check.prop('checked',$(this).prop('checked'));
+    //
+    //       if ($(this).prop('checked')) {
+    //           $('.page-action a').css('display','');
+    //       }else {
+    //           $('.page-action a').css('display','none');
+    //       }
+    //   });
+    //
+    //   sons_check.on('click',function () {
+    //
+    //       if( $(this).prop('checked')) {
+    //           ++idex;
+    //       }else{
+    //           --idex;
+    //       }
+    //
+    //       if (idex ===  sons_check.length) {
+    //           all_check.prop('checked',$(this).prop('checked'));
+    //       }else{
+    //           all_check.prop('checked',false);
+    //       }
+    //
+    //       if (idex <= sons_check.length) {
+    //           delete_btn.fadeIn();
+    //       }
+    //       if(idex == 0){
+    //           delete_btn.fadeOut();
+    //       }
+    //       console.log(idex);
+    //   });
 
   });
 
