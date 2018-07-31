@@ -1,3 +1,42 @@
+<?php
+
+
+require_once dirname(__FILE__).'/../function.php';
+
+news_logon_cred();
+
+// TODO: 数据库文章数据显示在页面上
+$query = news_bridege_sql(
+        "select posts.*,categories.name,users.nickname from posts 
+INNER JOIN categories on posts.category_id= categories.id
+INNER JOIN users on posts.user_id=users.id
+order by created desc;"
+);
+$posts = news_query_all($query);
+
+// 分类状态转义
+ function status($status){
+     $arr=array(
+         'drafted' =>'草稿',
+         'published' => '已发布',
+         'trashed' => '垃圾箱'
+
+     );
+    return $arr[$status];
+ }
+
+ // 格式化时间
+function convert_date($time){
+
+  date_default_timezone_set('PRC');
+  $strtime=strtotime($time);
+  return date('Y-m-d<b\r>H:i:s',$strtime);
+ 
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -60,42 +99,20 @@
           </tr>
         </thead>
         <tbody>
+        <?php foreach($posts as $value): ?>
           <tr>
             <td class="text-center"><input type="checkbox"></td>
-            <td>随便一个名称</td>
-            <td>小小</td>
-            <td>潮科技</td>
-            <td class="text-center">2016/10/07</td>
-            <td class="text-center">已发布</td>
+            <td><?php echo $value['title']; ?></td>
+            <td><?php echo $value['nickname']; ?></td>
+            <td><?php echo $value['name']; ?></td>
+            <td class="text-center"><?php echo convert_date($value['created']) ?></td>
+            <td class="text-center"><?php echo status($value['status']); ?></td>
             <td class="text-center">
               <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
               <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
             </td>
           </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>随便一个名称</td>
-            <td>小小</td>
-            <td>潮科技</td>
-            <td class="text-center">2016/10/07</td>
-            <td class="text-center">已发布</td>
-            <td class="text-center">
-              <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-center"><input type="checkbox"></td>
-            <td>随便一个名称</td>
-            <td>小小</td>
-            <td>潮科技</td>
-            <td class="text-center">2016/10/07</td>
-            <td class="text-center">已发布</td>
-            <td class="text-center">
-              <a href="javascript:;" class="btn btn-default btn-xs">编辑</a>
-              <a href="javascript:;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
+         <?php endforeach; ?>
         </tbody>
       </table>
     </div>
